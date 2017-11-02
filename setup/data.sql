@@ -1,22 +1,4 @@
 use benchdb;
-create table mem_tbl (
-	id INT,
-	first_name VARCHAR(50),
-	last_name VARCHAR(50),
-	email VARCHAR(50),
-	gender VARCHAR(50),
-	ip_address VARCHAR(20)
-) ENGINE=MEMORY;
-
-create table disk_tbl (
-	id INT,
-	first_name VARCHAR(50),
-	last_name VARCHAR(50),
-	email VARCHAR(50),
-	gender VARCHAR(50),
-	ip_address VARCHAR(20)
-) ENGINE=InnoDB;
-
 insert into mem_tbl (id, first_name, last_name, email, gender, ip_address) values (1, 'Floris', 'Bonanno', 'fbonanno0@desdev.cn', 'Female', '59.141.163.211');
 insert into mem_tbl (id, first_name, last_name, email, gender, ip_address) values (2, 'Misty', 'Jancey', 'mjancey1@walmart.com', 'Female', '41.103.120.48');
 insert into mem_tbl (id, first_name, last_name, email, gender, ip_address) values (3, 'Constantin', 'Kent', 'ckent2@furl.net', 'Male', '27.181.218.107');

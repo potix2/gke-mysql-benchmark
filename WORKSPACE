@@ -35,3 +35,10 @@ container_pull(
     repository = "eroadltd/ubuntu-ca-certificates",
     tag = "latest",
 )
+
+container_pull(
+    name = "mysql",
+    registry = "index.docker.io",
+    repository = "library/mysql",
+    tag = "5.7",
+)
