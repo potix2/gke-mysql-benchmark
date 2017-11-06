@@ -6,6 +6,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"math"
+	"math/rand"
 	"sort"
 	"time"
 )
@@ -30,6 +31,53 @@ func queryTable(db *sql.DB, tableName string) error {
 			return err
 		}
 	}
+	return nil
+}
+
+func queryRandomSelect(db *sql.DB, tableName string, count int) error {
+	rand.Seed(time.Now().UnixNano())
+	for i := 0; i < count; i++ {
+		id := rand.Intn(1000)
+		rows, err := db.Query(fmt.Sprintf("SELECT * FROM %s WHERE id = %d", tableName, id))
+		if err != nil {
+			panic(err.Error())
+			return err
+		}
+
+		for rows.Next() {
+			var id int
+			var firstName, lastName, email, gender, ipAddress string
+			err = rows.Scan(&id, &firstName, &lastName, &email, &gender, &ipAddress)
+			if err != nil {
+				fmt.Printf("error=%v\n", err)
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func queryRandomSelectId(db *sql.DB, tableName string, count int) error {
+	rand.Seed(time.Now().UnixNano())
+	for i := 0; i < count; i++ {
+		id := rand.Intn(1000)
+		rows, err := db.Query(fmt.Sprintf("SELECT id FROM %s WHERE id = %d", tableName, id))
+		if err != nil {
+			panic(err.Error())
+			return err
+		}
+
+		for rows.Next() {
+			var id int
+			err = rows.Scan(&id)
+			if err != nil {
+				fmt.Printf("error=%v\n", err)
+				return err
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -79,5 +127,25 @@ func main() {
 	fmt.Println("bulk select from disk_tbl")
 	runBenchmark(tryCount, func() error {
 		return queryTable(db, "disk_tbl")
+	})
+
+	fmt.Println("random select 10 rows by id from disk_tbl")
+	runBenchmark(tryCount, func() error {
+		return queryRandomSelect(db, "disk_tbl", 10)
+	})
+
+	fmt.Println("random select 100 rows by id from disk_tbl")
+	runBenchmark(tryCount, func() error {
+		return queryRandomSelect(db, "disk_tbl", 100)
+	})
+
+	fmt.Println("random select 10 rows by id from disk_tbl")
+	runBenchmark(tryCount, func() error {
+		return queryRandomSelectId(db, "disk_tbl", 10)
+	})
+
+	fmt.Println("random select 100 rows by id from disk_tbl")
+	runBenchmark(tryCount, func() error {
+		return queryRandomSelectId(db, "disk_tbl", 100)
 	})
 }
